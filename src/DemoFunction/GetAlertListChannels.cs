@@ -11,6 +11,7 @@ using DemoFunction.Models;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using System;
 
 namespace DemoFunction
 {
@@ -40,8 +41,16 @@ namespace DemoFunction
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var reader = new StreamReader(blob);
-            return new OkObjectResult(JsonConvert.DeserializeObject<AlertListTeamsChannel[]>(await reader.ReadToEndAsync()));
+            try
+            {
+                var reader = new StreamReader(blob);
+                return new OkObjectResult(JsonConvert.DeserializeObject<AlertListTeamsChannel[]>(await reader.ReadToEndAsync()));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"error reading blob 'data/alertlists-channels.json': {e.Message}");
+                return new NotFoundResult();
+            }
         }
     }
 }

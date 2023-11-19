@@ -59,11 +59,17 @@ namespace DemoFunction
             if (string.IsNullOrEmpty(apiKey)) throw new InvalidOperationException("App setting API_KEY must be set.");
             if (string.IsNullOrEmpty(apiUrl)) throw new InvalidOperationException("App setting API_URL must be set.");
 
-            var result = await _http.GetFromJsonAsync<AlertListsResult>($"{apiUrl}/?api_key={apiKey}");
-
-            var response = result.results.Select(alert => new AlertList { AlertListId = alert.id, AlertListName = alert.name });
-
-            return new OkObjectResult(response);
+            try
+            {
+                var result = await _http.GetFromJsonAsync<AlertListsResult>($"{apiUrl}/?api_key={apiKey}");
+                var response = result.results.Select(alert => new AlertList { AlertListId = alert.id, AlertListName = alert.name });
+                return new OkObjectResult(response);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"error accessing API '{apiUrl}': {e.Message}");
+                return new NotFoundResult();
+            }
         }
     }
-} 
+}

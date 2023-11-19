@@ -10,6 +10,7 @@ using DemoFunction.Models;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using System;
 
 namespace DemoFunction
 {
@@ -44,10 +45,16 @@ namespace DemoFunction
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            await req.Body.CopyToAsync(blob);
-
-            return new OkResult();
-            // add comment
+            try
+            {
+                await req.Body.CopyToAsync(blob);
+                return new OkResult();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"error writing blob 'data/alertlists-channels.json': {e.Message}");
+                return new NotFoundResult();
+            }
         }
     }
 }

@@ -74,13 +74,21 @@ module keyVaultSecretsUserRoleAssignment 'modules/role_assignment.bicep' = {
   ]
 }
 
-/* resource apiSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource apiUrlSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
-  name: 'apiKey'
+  name: 'api-url'
   properties: {
-    value: apiKey
+    value: apiUrl
   }
-} */
+}
+
+resource apiKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+  parent: keyVault
+  name: 'api-key'
+  properties: {
+    value: apiUrl
+  }
+}
 
 resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' = if (isDeployVnet) {
   name: vnetName
@@ -241,11 +249,11 @@ resource webConfig 'Microsoft.Web/sites/config@2022-03-01' = {
       }
       {
         name: 'API_KEY'
-        value: '@Microsoft.KeyVault(SecretUri=${apiKey.properties.secretUri})'
+        value: '@Microsoft.KeyVault(SecretUri=${apiKeySecret.properties.secretUri})'
       }
       {
         name: 'API_URL'
-        value: apiUrl 
+        value: '@Microsoft.KeyVault(SecretUri=${apiUrlSecret.properties.secretUri})'
       }
     ]
   }

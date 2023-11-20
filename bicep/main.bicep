@@ -4,8 +4,6 @@ param environment string
 param isLinuxPlan bool = false
 param runtimeVersion string = 'Dotnet'
 param apiUrl string
-//param apiKey string
-//param apiKeySecretUri string
 param isDeployVnet bool = false
 param tags object = {
   environment: environment

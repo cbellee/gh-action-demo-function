@@ -32,11 +32,6 @@ resource userManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2
   location: location
 }
 
-resource apiKey 'Microsoft.KeyVault/vaults/secrets@2023-02-01' existing = {
-  parent: keyVault
-  name: 'viper-api'
-}
-
 resource appInsights 'Microsoft.Insights/components@2020-02-02-preview' = {
   name: appInsightsName
   kind: 'web'

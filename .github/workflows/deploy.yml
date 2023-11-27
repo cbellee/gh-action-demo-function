@@ -70,7 +70,7 @@ jobs:
         inlineScript: |
           #!/bin/bash
           echo "Uploading scripts/alertlists-channels.json to Azure Blob storage account: ${{ env.STORAGE_ACCOUNT_NAME }}}} and container: ${{ env.STORAGE_CONTAINER_NAME }}"
-          az storage blob upload --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --container-name ${{ env.STORAGE_CONTAINER_NAME }} --file ./scripts/alertlists-channels.json --name alertlists-channels.json
+          az storage blob upload --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --container-name ${{ env.STORAGE_CONTAINER_NAME }} --file ./scripts/alertlists-channels.json --name alertlists-channels.json --overwrite
           echo "Uploaded alertlists-channels.json to Azure Blob storage"
     
     - name: 'Run Azure Functions Action'

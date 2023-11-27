@@ -61,7 +61,18 @@ jobs:
           #!/bin/bash
           echo "Getting Bicep outputs"
           echo FUNCTION_NAME=$(az deployment group show --name 'DeployInfrastructure' --resource-group ${{ vars.RESOURCE_GROUP }} --query properties.outputs.functionName.value --output tsv) >> $GITHUB_ENV
+          echo STORAGE_ACCOUNT_NAME=$(az deployment group show --name 'DeployInfrastructure' --resource-group ${{ vars.RESOURCE_GROUP }} --query properties.outputs.storageAccountName.value --output tsv) >> $GITHUB_ENV
+          echo STORAGE_CONTAINER_NAME=$(az deployment group show --name 'DeployInfrastructure' --resource-group ${{ vars.RESOURCE_GROUP }} --query properties.outputs.containerName.value --output tsv) >> $GITHUB_ENV
 
+    - name: 'Upload `alertlists-channels.json` to Azure Blob storage'
+      uses: Azure/CLI@v1
+      with:
+        inlineScript: |
+          #!/bin/bash
+          echo "Uploading scripts/alertlists-channels.json to Azure Blob storage account: ${{ env.STORAGE_ACCOUNT_NAME }}}} and container: ${{ env.STORAGE_CONTAINER_NAME }}"
+          az storage blob upload --account-name ${{ env.STORAGE_ACCOUNT_NAME }} --container-name ${{ env.STORAGE_CONTAINER_NAME }} --file ./scripts/alertlists-channels.json --name alertlists-channels.json
+          echo "Uploaded alertlists-channels.json to Azure Blob storage"
+    
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
       id: deployFuncApp

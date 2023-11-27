@@ -293,3 +293,5 @@ resource webConfig 'Microsoft.Web/sites/config@2022-03-01' = {
 
 output functionFqdn string = funcApp.properties.defaultHostName
 output functionName string = funcApp.name
+output storageAccountName string = dataStorageAccount.name
+output containerName string = dataStorageAccountContainer.name

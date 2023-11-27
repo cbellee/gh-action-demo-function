@@ -11,6 +11,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System;
+using System.Web.Http;
 
 namespace DemoFunction
 {
@@ -43,17 +44,18 @@ namespace DemoFunction
                 FileAccess.Write, Connection = "DataBlobStorageConnectionString")] Stream blob
             )
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation($"C# HTTP trigger function processed a request. Method:{req.Method} Protocol:{req.Protocol} Path:{req.Path}");
 
             try
             {
+                _logger.LogError($"writing blob 'data/alertlists-channels.json'");
                 await req.Body.CopyToAsync(blob);
                 return new OkResult();
             }
             catch (Exception e)
             {
                 _logger.LogError($"error writing blob 'data/alertlists-channels.json': {e.Message}");
-                return new NotFoundResult();
+                return new InternalServerErrorResult();
             }
         }
     }

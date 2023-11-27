@@ -8,10 +8,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using DemoFunction.Models;
+using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using System;
+using System.Web.Http;
 
 namespace DemoFunction
 {
@@ -39,17 +40,18 @@ namespace DemoFunction
                 FileAccess.Read, Connection = "DataBlobStorageConnectionString")] Stream blob
             )
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation($"C# HTTP trigger function processed a request. Method:{req.Method} Protocol:{req.Protocol} Path:{req.Path}");
 
             try
             {
+                _logger.LogInformation("reading blob 'data/alertlists-channels.json'");
                 var reader = new StreamReader(blob);
                 return new OkObjectResult(JsonConvert.DeserializeObject<AlertListTeamsChannel[]>(await reader.ReadToEndAsync()));
             }
             catch (Exception e)
             {
                 _logger.LogError($"error reading blob 'data/alertlists-channels.json': {e.Message}");
-                return new NotFoundResult();
+                return new InternalServerErrorResult();
             }
         }
     }

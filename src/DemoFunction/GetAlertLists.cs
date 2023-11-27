@@ -14,6 +14,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace DemoFunction
 {
@@ -40,7 +41,7 @@ namespace DemoFunction
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "alertlists")] HttpRequest req)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation($"C# HTTP trigger function processed a request. Method:{req.Method} Protocol:{req.Protocol} Path:{req.Path}");
 
             if (!string.IsNullOrEmpty(_config["USE_MOCK_DATA"]))
             {
@@ -61,14 +62,16 @@ namespace DemoFunction
 
             try
             {
+                _logger.LogInformation($"calling endpoint: {apiUrl}");
                 var result = await _http.GetFromJsonAsync<AlertListsResult>($"{apiUrl}/?api_key={apiKey}");
                 var response = result.results.Select(alert => new AlertList { AlertListId = alert.id, AlertListName = alert.name });
+                _logger.LogInformation($"returning {response.Count()} alert lists");
                 return new OkObjectResult(response);
             }
             catch (Exception e)
             {
                 _logger.LogError($"error accessing API '{apiUrl}': {e.Message}");
-                return new NotFoundResult();
+                return new InternalServerErrorResult();
             }
         }
     }

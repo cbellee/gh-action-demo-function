@@ -19,6 +19,7 @@ var suffix = uniqueString(resourceGroup().id)
 var vnetName = 'vnet-${suffix}'
 var funcAppName = '${environment}-${appName}-${suffix}'
 var funcStorageAccountName = 'stor${suffix}'
+var dataStorageAccountName = 'data${suffix}'
 var hostingPlanName = 'asp-${suffix}'
 var appInsightsName = 'ai-${suffix}'
 var keyVaultName = 'kv-${suffix}'
@@ -40,6 +41,29 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02-preview' = {
   properties: {
     Application_Type: 'web'
   }
+}
+
+resource dataStorageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
+  kind: 'StorageV2'
+  location: location
+  name: dataStorageAccountName
+  sku: {
+    name: 'Standard_LRS'
+  }
+  properties: {
+    allowBlobPublicAccess: false
+    supportsHttpsTrafficOnly: true
+  }
+}
+
+resource dataStorageAccountBlobService 'Microsoft.Storage/storageAccounts/blobServices@2023-01-01' = {
+  parent: dataStorageAccount
+  name: 'default'
+}
+
+resource dataStorageAccountContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
+  parent: dataStorageAccountBlobService
+  name: 'data'
 }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
@@ -249,6 +273,10 @@ resource webConfig 'Microsoft.Web/sites/config@2022-03-01' = {
       {
         name: 'API_URL'
         value: '@Microsoft.KeyVault(SecretUri=${apiUrlSecret.properties.secretUri})'
+      }
+      {
+        name: 'AzureWebJobsDataBlobStorageConnectionString'
+        value: 'DefaultEndpointsProtocol=https;AccountName=${dataStorageAccount.name};AccountKey=${dataStorageAccount.listKeys().keys[0].value};'
       }
     ]
   }

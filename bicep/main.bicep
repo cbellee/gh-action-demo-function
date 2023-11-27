@@ -4,6 +4,7 @@ param environment string
 param isLinuxPlan bool = false
 param runtimeVersion string = 'Dotnet'
 param apiUrl string
+param apiKey string
 param isDeployVnet bool = false
 param tags object = {
   environment: environment
@@ -105,7 +106,7 @@ resource apiKeySecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
   name: 'api-key'
   properties: {
-    value: apiUrl
+    value: apiKey
   }
 }
 

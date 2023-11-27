@@ -49,7 +49,7 @@ jobs:
         subscriptionId: ${{ vars.SUBSCRIPTION_ID }}
         resourceGroupName: ${{ vars.RESOURCE_GROUP }}
         template: ./bicep/main.bicep
-        parameters: 'apiUrl=${{ vars.API_URL }}  appName=${{ vars.APP }} environment=${{ inputs.environment }} location=${{ vars.LOCATION }}'
+        parameters: 'apiUrl=${{ vars.API_URL }} apiKey=${{ vars.API_KEY }}  appName=${{ vars.APP }} environment=${{ inputs.environment }} location=${{ vars.LOCATION }}'
         failOnStdErr: false
         deploymentMode: 'Incremental'
         deploymentName: 'DeployInfrastructure'

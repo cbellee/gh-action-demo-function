@@ -65,7 +65,7 @@ namespace DemoFunction
 
             try
             {
-                _logger.LogInformation($"calling endpoint: {apiUrl}");
+                _logger.LogInformation($"calling endpoint: {$"{apiUrl}/?api_key={apiKey}"}");
                 var result = await _http.GetFromJsonAsync<AlertListsResult>($"{apiUrl}/?api_key={apiKey}");
                 var response = result.results.Select(alert => new AlertList { AlertListId = alert.id, AlertListName = alert.name });
                 _logger.LogInformation($"returning {response.Count()} alert lists");

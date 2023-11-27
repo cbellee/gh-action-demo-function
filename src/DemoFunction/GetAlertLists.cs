@@ -55,7 +55,10 @@ namespace DemoFunction
             }
 
             string apiKey = _config["API_KEY"];
+            _logger.LogInformation($"API_KEY: {apiKey}");
+            
             string apiUrl = _config["API_URL"];
+            _logger.LogInformation($"API_URL: {apiUrl}");
 
             if (string.IsNullOrEmpty(apiKey)) throw new InvalidOperationException("App setting API_KEY must be set.");
             if (string.IsNullOrEmpty(apiUrl)) throw new InvalidOperationException("App setting API_URL must be set.");

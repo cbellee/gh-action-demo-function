@@ -15,13 +15,19 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Threading;
 
 namespace DemoFunction
 {
     public class GetAlertLists
     {
         private readonly ILogger<GetAlertLists> _logger;
-        private static readonly HttpClient _http = new HttpClient();
+        private static readonly double httpTimeout = 300; // set timeout to 5 minutes for long http requests to the remote API
+
+        private static HttpClient _http = new()
+        {
+            Timeout = TimeSpan.FromSeconds(httpTimeout)
+        };
         private readonly IConfiguration _config;
 
         public GetAlertLists(ILogger<GetAlertLists> log, IConfiguration config)

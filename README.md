@@ -12,11 +12,10 @@
 2. clone this repo to your local machine
   ![clone repo](/images/clone-repo.png)
 3. set the local repo's remote to the new GitHub repo
-    - `git remote add origin <HTTPS or SSH path from previous step>`
+    - `$ git remote add origin <HTTPS or SSH path from previous step>`
 4. push the repo to GitHub
-5. - `git push -u origin main`
-6. get GitHub repoID by running the query below using the GitHub graphql explorer at this url
-    - `https://docs.github.com/en/graphql/overview/explorer`
+    - `$ git push -u origin main`
+6. get GitHub repoID by running the query below using the GitHub graphql explorer at this url `https://docs.github.com/en/graphql/overview/explorer`
 
     ```graphql
     query {
@@ -28,7 +27,7 @@
 
 ![github explorer](/images/github-explorer.png)
 
-7. save the repoID for later use
+7. save the repoID for use later
 8. create GitHub access token
 
     ![github access token](./images/gh-access-token.png)
@@ -49,7 +48,11 @@
 
     ![github access token scopes](./images/gh-access-token-scopes.png)
 
-9. run ./scripts/env_vars.ps1
+9. add environment variables to GitHub repo
   - `PS C:\> ./scripts/env_vars.ps1 -RepoId <GitHub RepoId> -Token <GitHib Access Token>`
-10. run ./scripts/federated-identity.ps1 to create the identity federation
-  - 
+10. federate GitHub and Azure AD 
+  - `PS C:\> ./scripts/federated-identity.ps1 -orgName <Git Organization name> -repoName <Git repo name>`
+11. add changes to repo, commit and push to execute the GitHub Action pipeline
+  - `$ git add .`
+  - `$ git commit -m "initial commit"`
+  - `$ git push`

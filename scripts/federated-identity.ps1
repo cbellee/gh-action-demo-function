@@ -1,8 +1,10 @@
-$appPrefix = 'gh-actions-federated-identity'
-$subscriptionId = az account show --query id --output tsv
-$orgName = 'cbellee'
-$repoName = 'gh-action-demo-function'
-$environments = @('dev','test','prod')
+param (
+    [string]$appPrefix = 'gh-actions-federated-identity',
+    [string]$subscriptionId = $(az account show --query id --output tsv),
+    [string]$orgName = 'cbellee',
+    [string]$repoName = 'gh-action-demo-function',
+    [string[]]$environments = @('dev', 'test', 'prod')
+)
 
 foreach ($environment in $environments) {
     $appName = "$appPrefix-$environment"
